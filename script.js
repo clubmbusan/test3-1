@@ -309,6 +309,15 @@ const taxBrackets = [
     { limit: Infinity, rate: 0.45, deduction: 65940000 }
 ];
 
+      document.getElementById("calculateButton").addEventListener("click", function () {
+    // ✅ 감면율 선택 드롭다운 요소 가져오기
+    const exemptionRateElement = document.getElementById("exemptionRate");
+
+    // ✅ 감면율 값 가져오기 (선택되지 않았으면 기본값 `0` 설정)
+    const selectedExemptionRate = exemptionRateElement ? parseFloat(exemptionRateElement.value) || 0 : 0;
+
+    console.log("선택된 감면율:", selectedExemptionRate); // 디버깅 로그 추가
+
  // 양도소득세 계산
     let rawTax = 0; // 양도소득세
     let remainingProfit = taxableProfitAfterDeduction; // 남은 과세표준
