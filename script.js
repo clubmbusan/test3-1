@@ -67,8 +67,7 @@ const numericFields = [
 
     propertyTypeSelect.addEventListener('change', updateFieldsByPropertyType);
     updateFieldsByPropertyType();
-    
-    
+        
     // 보유 기간 자동 계산
     const calculateHoldingYears = () => {
         const acquisitionDate = new Date(acquisitionDateInput.value);
