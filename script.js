@@ -297,8 +297,6 @@ longTermDeductionAmount = profit * longTermDeductionRate;
 const basicDeduction = propertyTypeSelect.value !== 'unregistered' ? 2500000 : 0; // 미등기 부동산 기본공제 없음
 let taxableProfitAfterDeduction = Math.max(taxableProfit - basicDeduction, 0); // taxableProfit에서 기본공제를 차감
     
-// src/taxCalculator.js
-
 document.addEventListener("DOMContentLoaded", function () {
     // 2023년 개정된 누진세율표
     const taxBrackets = [
