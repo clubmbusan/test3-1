@@ -351,4 +351,3 @@ document.getElementById('result').innerHTML = `
     `;
   });
 }); // DOMContentLoaded 끝
-
