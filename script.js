@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ HTML이 모두 로드됨! JavaScript 실행 시작");
-
-    // ✅ DOM 요소 가져오기
+       // ✅ DOM 요소 가져오기
     const propertyTypeSelect = document.getElementById("propertyType");
     const regulatedAreaField = document.getElementById("regulatedAreaField");
     const singleHouseExemptionField = document.getElementById("singleHouseExemptionField");
