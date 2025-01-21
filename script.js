@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeExpensesModal = document.getElementById('closeExpensesModal'); // 필요경비 모달 닫기 버튼
     const saveExpensesButton = document.getElementById('saveExpenses'); // 필요경비 저장 버튼
     const totalExpensesDisplay = document.getElementById('totalExpensesDisplay'); // 필요경비 표시
-    const exemptionSection = document.getElementById("exemptionSection"); // 감면율 선택 필드 추가
- 
+     
     // 상태 변수
     let isAcquisitionModalOpen = false; // 취득가액 모달 상태
     let isExpensesModalOpen = false; // 필요경비 모달 상태
