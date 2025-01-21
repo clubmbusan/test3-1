@@ -201,7 +201,13 @@ document.querySelectorAll('#expensesModal input[type="text"]').forEach((input) =
         if (checkbox) checkbox.checked = !!input.value.trim();
     });
 });
-   
+
+    // ✅ 감면율 가져오기 함수 추가
+const getSelectedExemptionRate = () => {
+    const exemptionRateElement = document.getElementById('exemptionRate'); // 감면율 선택 필드 가져오기
+    return exemptionRateElement ? parseInt(exemptionRateElement.value, 10) || 0 : 0; // 값이 없으면 기본값 0 반환
+};
+
 // 계산 버튼 클릭 이벤트
 calculateButton.addEventListener('click', () => {
     const acquisitionDate = new Date(acquisitionDateInput.value);
@@ -234,7 +240,7 @@ calculateButton.addEventListener('click', () => {
         alert('양도차익이 0보다 작습니다. 입력값을 확인해주세요.');
         return;
     }
-
+    
     // 기본 세율 및 장기보유특별공제율 계산
 let taxRate = 0;
 let surcharge = 0;
@@ -341,16 +347,21 @@ const taxBrackets = [
     const applicableDeduction = taxBrackets.find(bracket => taxableProfitAfterDeduction <= bracket.limit)?.deduction || 0;
     rawTax -= applicableDeduction;
 
-    // 부가세 계산
-    const educationTax = Math.floor(rawTax * 0.1); // 지방교육세 (10%)
+    // ✅ 부가세 세율 및 공제 계산
+    let rawTax = profit * 0.2; // 기본 세율 20% (예시)
+    let educationTax = Math.floor(rawTax * 0.1); // 지방교육세 (10%)
+    
+   // ✅ 감면율 적용 (사용자가 선택한 값 가져오기)
+    const selectedExemptionRate = getSelectedExemptionRate();
+    let ruralTax = 0;
 
-     let ruralTax = 0; // 기본값 0으로 설정
-     if (selectedExemptionRate > 0) { // 감면이 선택된 경우만 적용
-         const taxReduction = rawTax * (selectedExemptionRate / 100); // 감면 금액 계산
-         ruralTax = Math.floor(taxReduction * 0.2); // 감면액의 20% 농특세 적용
-     }
+    if (propertyTypeSelect.value === 'commercial' && selectedExemptionRate > 0) {
+        const taxReduction = rawTax * (selectedExemptionRate / 100);
+        ruralTax = Math.floor(taxReduction * 0.2);
+    }
 
-     const totalTax = rawTax + educationTax + ruralTax;
+    // ✅ 총 세금 계산
+    const totalTax = rawTax + educationTax + ruralTax;
     
     // 결과 출력
 document.getElementById('result').innerHTML = `
