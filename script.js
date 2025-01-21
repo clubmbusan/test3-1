@@ -352,6 +352,7 @@ document.getElementById('result').innerHTML = `
     <p>과세표준 (기본공제 후): ${taxableProfitAfterDeduction.toLocaleString()} 원</p>
     <p>양도소득세: ${rawTax.toLocaleString()} 원</p>
     <p>지방교육세: ${educationTax.toLocaleString()} 원</p>
+    <p>감면율: ${selectedExemptionRate}%</p>
     <p>농어촌특별세: ${ruralTax.toLocaleString()} 원</p>
     <p><strong>총 세금: ${totalTax.toLocaleString()} 원</strong></p>
         
