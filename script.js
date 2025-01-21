@@ -202,9 +202,10 @@ document.querySelectorAll('#expensesModal input[type="text"]').forEach((input) =
     });
 });
 
-    // ✅ 감면율 가져오기 함수
+    // ✅ 감면율 가져오기 함수 (오류 수정)
     const getSelectedExemptionRate = () => {
-        return exemptionRateElement ? parseInt(exemptionRateElement.value, 10) || 0 : 0;
+        const exemptionRateElement = document.getElementById('exemptionRate'); // 감면율 선택 필드 가져오기
+        return exemptionRateElement ? parseInt(exemptionRateElement.value, 10) || 0 : 0; // 값이 없으면 기본값 0 반환
     };
     
 // 계산 버튼 클릭 이벤트
