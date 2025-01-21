@@ -279,19 +279,6 @@ if (propertyTypeSelect.value === 'house' && singleHouseExemption === 'yes') {
         }
     }
 }
-
-// ✅ **여기 아래에 "토지/건물" 장기보유특별공제 추가!**
-else if (propertyTypeSelect.value === 'commercial') {
-    if (holdingYearsInt >= 3) {
-        longTermDeductionRate = Math.min((holdingYearsInt - 3) * 0.02 + 0.06, 0.3);
-    }
-}
-
- // ✅ **장기보유특별공제 금액 정상 반영**
-longTermDeductionAmount = profit * longTermDeductionRate;
-
- // ✅ 기존 코드 수정 (과세표준 정상 반영)
- taxableProfit = profit - longTermDeductionAmount; // 공제 후 과세표준 반영
     
 // 기본공제 적용 (과세표준에서 차감)
 const basicDeduction = propertyTypeSelect.value !== 'unregistered' ? 2500000 : 0; // 미등기 부동산 기본공제 없음
