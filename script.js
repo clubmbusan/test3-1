@@ -279,6 +279,19 @@ if (propertyTypeSelect.value === 'house' && singleHouseExemption === 'yes') {
         }
     }
 }
+
+    // ✅ **여기 아래에 "토지/건물" 장기보유특별공제 추가!**
+else if (propertyTypeSelect.value === 'commercial') {
+    if (holdingYearsInt >= 3) {
+        longTermDeductionRate = Math.min((holdingYearsInt - 3) * 0.02 + 0.06, 0.3);
+    }
+}
+
+ // ✅ **장기보유특별공제 금액 정상 반영**
+longTermDeductionAmount = profit * longTermDeductionRate;
+
+ // ✅ 기존 코드 수정 (과세표준 정상 반영)
+ taxableProfit = profit - longTermDeductionAmount; // 공제 후 과세표준 반영
     
 // 기본공제 적용 (과세표준에서 차감)
 const basicDeduction = propertyTypeSelect.value !== 'unregistered' ? 2500000 : 0; // 미등기 부동산 기본공제 없음
@@ -296,22 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { limit: 1000000000, rate: 0.42, deduction: 35940000 },
         { limit: Infinity, rate: 0.45, deduction: 65940000 }
     ];
-
-    document.getElementById("calculateButton").addEventListener("click", function () {
-        // ✅ 감면율 선택 드롭다운 요소 가져오기
-        const exemptionRateElement = document.getElementById("exemptionRate");
-
-        // ✅ 감면율 값 가져오기 (선택되지 않았으면 기본값 `0` 설정)
-        const selectedExemptionRate = exemptionRateElement ? parseFloat(exemptionRateElement.value) || 0 : 0;
-
-        console.log("선택된 감면율:", selectedExemptionRate); // 디버깅 로그 추가
-
-        // ✅ 필수 변수 확인 (taxableProfitAfterDeduction 선언 필요)
-        if (typeof taxableProfitAfterDeduction === "undefined") {
-            console.error("오류: taxableProfitAfterDeduction 변수가 정의되지 않았습니다.");
-            return;
-        }
-
+  
         // ✅ 양도소득세 계산
         let rawTax = 0; 
         let remainingProfit = taxableProfitAfterDeduction; 
