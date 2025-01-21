@@ -56,6 +56,8 @@ const numericFields = [
     // 부동산 유형에 따라 필드 표시/숨김
     const updateFieldsByPropertyType = () => {
         const propertyType = propertyTypeSelect.value;
+        
+        // 주택 선택 시 조정대상지역 & 1세대 1주택 여부 표시
         if (propertyType === 'house') {
             regulatedAreaField.style.display = 'block';
             singleHouseExemptionField.style.display = 'block';
@@ -63,10 +65,20 @@ const numericFields = [
             regulatedAreaField.style.display = 'none';
             singleHouseExemptionField.style.display = 'none';
         }
+
+        // ✅ "토지/건물"을 선택하면 감면율 선택 필드(`exemptionSection`) 표시, 아니면 숨김
+        if (exemptionSection) { // 감면율 선택 필드가 존재할 경우만 실행
+        if (propertyType === 'commercial') { 
+            exemptionSection.style.display = 'block'; // 감면율 필드 보이기
+        } else {
+            exemptionSection.style.display = 'none'; // 감면율 필드 숨기기
+        }
+      } 
     };
 
+    // 부동산 유형 변경 시 감면율 필드 표시/숨김 반영
     propertyTypeSelect.addEventListener('change', updateFieldsByPropertyType);
-    updateFieldsByPropertyType();
+    updateFieldsByPropertyType(); // 페이지 로드 시 초기 상태 반영
 
     // 보유 기간 자동 계산
     const calculateHoldingYears = () => {
