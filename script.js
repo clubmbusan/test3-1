@@ -315,7 +315,7 @@ longTermDeductionAmount = profit * longTermDeductionRate;
 const basicDeduction = propertyTypeSelect.value !== 'unregistered' ? 2500000 : 0; // 미등기 부동산 기본공제 없음
 let taxableProfitAfterDeduction = Math.max(taxableProfit - basicDeduction, 0); // taxableProfit에서 기본공제를 차감
     
-// 2023년 개정된 누진세율표
+    // 2023년 개정된 누진세율표
 const taxBrackets = [
     { limit: 14000000, rate: 0.06, deduction: 0 },
     { limit: 50000000, rate: 0.15, deduction: 1260000 },
@@ -326,44 +326,43 @@ const taxBrackets = [
     { limit: 1000000000, rate: 0.42, deduction: 35940000 },
     { limit: Infinity, rate: 0.45, deduction: 65940000 }
 ];
-            
- // 양도소득세 계산
-    let rawTax = 0; // 양도소득세
-    let remainingProfit = taxableProfitAfterDeduction; // 남은 과세표준
 
-    for (let i = 0; i < taxBrackets.length; i++) {
-        const bracket = taxBrackets[i];
-        const previousLimit = i === 0 ? 0 : taxBrackets[i - 1].limit; // 이전 구간의 상한
+// ✅ 양도소득세 계산 (누진세율 적용)
+let rawTax = 0;
+let remainingProfit = taxableProfitAfterDeduction; // 남은 과세표준
 
-        // 현재 구간에서 남은 금액 계산
-        if (remainingProfit <= 0) break; // 남은 금액이 없으면 종료
-        const taxableAmount = Math.min(bracket.limit - previousLimit, remainingProfit); // 현재 구간에서 과세할 금액
-        const taxForBracket = taxableAmount * bracket.rate; // 현재 구간의 세금 계산
-        rawTax += taxForBracket; // 세금 누적
-        remainingProfit -= taxableAmount; // 남은 금액 갱신
-    }
+for (let i = 0; i < taxBrackets.length; i++) {
+    const bracket = taxBrackets[i];
+    const previousLimit = i === 0 ? 0 : taxBrackets[i - 1].limit; // 이전 구간 상한
 
-    // 누진공제 적용
-    const applicableDeduction = taxBrackets.find(bracket => taxableProfitAfterDeduction <= bracket.limit)?.deduction || 0;
-    rawTax -= applicableDeduction;
+    // 현재 구간에서 남은 금액 계산
+    if (remainingProfit <= 0) break; // 남은 금액이 없으면 종료
+    const taxableAmount = Math.min(bracket.limit - previousLimit, remainingProfit);
+    const taxForBracket = taxableAmount * bracket.rate; // 현재 구간의 세금 계산
+    rawTax += taxForBracket; // 세금 누적
+    remainingProfit -= taxableAmount; // 남은 금액 갱신
+}
 
-    // ✅ 부가세 세율 및 공제 계산
-    let rawTax = profit * 0.2; // 기본 세율 20% (예시)
-    let educationTax = Math.floor(rawTax * 0.1); // 지방교육세 (10%)
-    
-   // ✅ 감면율 적용 (사용자가 선택한 값 가져오기)
-    const selectedExemptionRate = getSelectedExemptionRate();
-    let ruralTax = 0;
+// ✅ 누진공제 적용
+const applicableDeduction = taxBrackets.find(bracket => taxableProfitAfterDeduction <= bracket.limit)?.deduction || 0;
+rawTax -= applicableDeduction; // 누진 공제 반영
 
-    if (propertyTypeSelect.value === 'commercial' && selectedExemptionRate > 0) {
-        const taxReduction = rawTax * (selectedExemptionRate / 100);
-        ruralTax = Math.floor(taxReduction * 0.2);
-    }
+// ✅ 감면율 적용 (사용자가 선택한 값 가져오기)
+const selectedExemptionRate = getSelectedExemptionRate();
+let ruralTax = 0;
 
-    // ✅ 총 세금 계산
-    const totalTax = rawTax + educationTax + ruralTax;
-    
-    // 결과 출력
+if (propertyTypeSelect.value === 'commercial' && selectedExemptionRate > 0) {
+    const taxReduction = rawTax * (selectedExemptionRate / 100);
+    ruralTax = Math.floor(taxReduction * 0.2);
+}
+
+// ✅ 부가세 세율 및 공제 계산
+let educationTax = Math.floor(rawTax * 0.1); // 지방교육세 (10%)
+
+// ✅ 총 세금 계산
+const totalTax = rawTax + educationTax + ruralTax;
+
+// ✅ 결과 출력
 document.getElementById('result').innerHTML = `
     <h3>계산 결과</h3>
     <p>보유 기간: ${holdingYearsInt} 년</p>
@@ -378,7 +377,6 @@ document.getElementById('result').innerHTML = `
     <p>감면율: ${selectedExemptionRate}%</p>
     <p>농어촌특별세: ${ruralTax.toLocaleString()} 원</p>
     <p><strong>총 세금: ${totalTax.toLocaleString()} 원</strong></p>
-        
-    `;
-    });
-  }); // DOMContentLoaded 끝
+  `;
+  });
+}); // DOMContentLoaded 끝
